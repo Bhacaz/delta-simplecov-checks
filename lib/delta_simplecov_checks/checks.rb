@@ -60,7 +60,7 @@ module DeltaSimplecovChecks
     end
 
     def build_annotations
-      @git_diff_data.files_diff.select { |file_diff| file_diff.missing_lines.flatten.any? }.flat_map do |file_diff|
+      @git_diff_data.files_diff.flat_map do |file_diff|
         file_diff.missing_lines.select(&:any?).map do |batch_lines|
           {
             path: file_diff.filename,
