@@ -19,8 +19,7 @@ module DeltaSimplecovChecks
     end
 
     def extract_delta
-      git_diff = File.read('coverage/diff.txt')
-      # git_diff = `git diff origin/master.. --no-color -U0`
+      git_diff = `git diff origin/master.. --no-color -U0`
 
       git_diff.split("\n").each do |line|
         if line.start_with?('diff --git a/')
