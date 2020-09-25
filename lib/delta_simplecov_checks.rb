@@ -1,0 +1,5 @@
+require 'delta_simplecov_checks/version'
+require 'delta_simplecov_checks/cli'
+require 'delta_simplecov_checks/file_diff'
+require 'delta_simplecov_checks/checks'
+require 'delta_simplecov_checks/git_diff_parser'

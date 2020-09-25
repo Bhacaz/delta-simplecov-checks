@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'delta_simplecov_checks'
+
+DeltaSimplecovChecks::CLI.new
+git_diff_data = DeltaSimplecovChecks::GitDiffParser.new
+DeltaSimplecovChecks::Checks.new(git_diff_data).post_check
