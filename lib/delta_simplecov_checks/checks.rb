@@ -76,7 +76,7 @@ module DeltaSimplecovChecks
 
     def build_output
       {
-        title: "Branch coverage: #{@git_diff_data.delta}%",
+        title: "Branch coverage: #{@git_diff_data.delta.round(2)}%",
         summary: "Total coverage: #{@git_diff_data.total_coverage.round(2)}%\nBranch coverage must be ≥ #{DeltaSimplecovChecks::CLI.minimum_delta}%",
         text: build_output_text,
         annotations: build_annotations
