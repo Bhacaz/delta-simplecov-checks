@@ -2,19 +2,15 @@
 
 module DeltaSimplecovChecks
   class CLI
-
-    # SECRET_KEY: ${{ secrets.SECRET_KEY }}
-    # GITHUB_APP_ID: ${{ secrets.APP_ID }}
-    # GITHUB_APP_INSTALLATION_ID: ${{ secrets.APP_INSTALLATION_ID }}
-    # GIT_COMMIT: ${{ github.sha }}
-    # REPOSITORY: ${{ github.repository }}
-
     def initialize
       @args = Hash[ARGV.each_slice(2).to_a]
-      @@sha = @args['--sha'] || '6605fdee412dc768bd106c5c62cf90ddca6b0f23'
-      @@repository = @args['--repository'] || 'Bhacaz/bright_serializer'
+      @@sha = @args['--sha']
+      @@repository = @args['--repository']
       @@coverage_path = @args['--coverage_path'] || 'coverage/.resultset.json'
       @@minimum_delta = @args['--minimum_delta'].to_i || 80
+
+      raise ArgumentError 'sha commmit is required (--sha).' unless @@sha
+      raise ArgumentError 'repository commmit is required (--repository).' unless @@repository
     end
 
     def self.sha

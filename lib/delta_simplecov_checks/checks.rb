@@ -89,8 +89,7 @@ module DeltaSimplecovChecks
       http.use_ssl = true
       req = Net::HTTP::Post.new(uri.request_uri, { 'Authorization' => "token #{self.class.get_app_access_token}", 'Accept' => 'application/vnd.github.antiope-preview+json' })
       req.body = build_checks_body.to_json
-      res = http.request(req)
-      # res.body
+      http.request(req)
     end
   end
 end
