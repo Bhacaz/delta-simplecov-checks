@@ -87,6 +87,15 @@ module DeltaSimplecovChecks
       end
     end
 
+    def post_with_serverless
+      uri = URI.parse('https://simplecov-checks-handler.vercel.app/api/simplecov_checks')
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      req = Net::HTTP::Post.new(uri.request_uri)
+      req.body = { repository: DeltaSimplecovChecks::CLI.repository, body: build_checks_body }.to_json
+      http.request(req)
+    end
+
     def build_output
       {
         title: "Branch coverage: #{@git_diff_data.delta.round(2)}%",
@@ -96,12 +105,12 @@ module DeltaSimplecovChecks
       }
     end
 
-    def post_check
-      uri = URI.parse("https://api.github.com/repos/#{DeltaSimplecovChecks::CLI.repository}/check-runs")
+    def post_check(repository: DeltaSimplecovChecks::CLI.repository, body: build_checks_body.to_json)
+      uri = URI.parse("https://api.github.com/repos/#{repository}/check-runs")
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       req = Net::HTTP::Post.new(uri.request_uri, { 'Authorization' => "token #{self.class.get_app_access_token}", 'Accept' => 'application/vnd.github.antiope-preview+json' })
-      req.body = build_checks_body.to_json
+      req.body = body
       http.request(req)
     end
   end
