@@ -9,8 +9,8 @@ module DeltaSimplecovChecks
       @@coverage_path = @args['--coverage_path'] || 'coverage/.resultset.json'
       @@minimum_delta = @args['--minimum_delta'].to_i || 80
 
-      raise ArgumentError 'sha commmit is required (--sha).' unless @@sha
-      raise ArgumentError 'repository commmit is required (--repository).' unless @@repository
+      raise 'sha commmit is required (--sha).' unless @@sha
+      raise 'repository commmit is required (--repository).' unless @@repository
     end
 
     def self.sha

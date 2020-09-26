@@ -21,14 +21,27 @@ module DeltaSimplecovChecks
           # JWT expiration time (10 minute maximum)
           exp: Time.now.to_i + (10 * 60),
           # GitHub App's identifier
-          iss: ENV['APP_ID']
+          iss: find_app_id
         }
 
         JWT.encode(payload, OpenSSL::PKey::RSA.new(ENV['APP_SECRET']), "RS256")
       end
 
+      def find_app_id
+        uri = URI.parse("https://api.github.com/app/installations")
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        req = Net::HTTP::Get.new(uri.request_uri, { 'Authorization' => "Bearer #{build_app_jwt}", 'Accept' => 'application/vnd.github.v3+json'})
+        res = http.request(req)
+
+        user = DeltaSimplecovChecks::CLI.repository.split('/').first
+        JSON.parse(res.body).each do |installation|
+          return installation['id'] if installation['account']['login'] == user
+        end
+      end
+
       def get_app_access_token
-        uri = URI.parse("https://api.github.com/app/installations/#{ENV['APP_INSTALLATION_ID']}/access_tokens")
+        uri = URI.parse("https://api.github.com/app/installations/#{find_app_id}/access_tokens")
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         req = Net::HTTP::Post.new(uri.request_uri, { 'Authorization' => "Bearer #{build_app_jwt}" })
